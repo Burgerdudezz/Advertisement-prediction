@@ -1,0 +1,26 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables
+.env
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Raw data files (keep directory, not data)
+data/raw/*
+!data/raw/.gitkeep
+
+# Output artefacts – ignore generated files, keep .gitkeep placeholders
+outputs/model.joblib
+outputs/metrics/*
+!outputs/metrics/.gitkeep
+outputs/plots/*
+!outputs/plots/.gitkeep
+outputs/predictions/*
+!outputs/predictions/.gitkeep
