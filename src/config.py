@@ -12,7 +12,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent   # repository root
 
-RAW_DATA_PATH      = BASE_DIR / "data" / "raw"  / "ad.csv"
+RAW_DATA_PATH      = BASE_DIR / "data" / "raw"  / "add.csv"
 PROCESSED_DATA_PATH = BASE_DIR / "data" / "processed" / "cleaned.csv"
 
 MODEL_PATH              = BASE_DIR / "outputs" / "model.joblib"
