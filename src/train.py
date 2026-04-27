@@ -21,6 +21,7 @@ from src.config import (
     PROCESSED_DATA_PATH,
     MODEL_PATH,
     LABEL_COLUMN,
+    CLEANED_HAS_HEADER,
     TEST_SIZE,
     RANDOM_SEED,
     RF_PARAMS,
@@ -46,7 +47,13 @@ def train(processed_path=PROCESSED_DATA_PATH, model_path=MODEL_PATH):
     # ------------------------------------------------------------------
     # 1. Load data
     # ------------------------------------------------------------------
-    df = pd.read_csv(processed_path)
+    # Cleaned data may be saved without a header row, so honor config.
+    read_header = 0 if CLEANED_HAS_HEADER else None
+    df = pd.read_csv(processed_path, header=read_header)
+
+    # If no explicit label column exists, treat the last column as target.
+    if LABEL_COLUMN not in df.columns:
+        df = df.rename(columns={df.columns[-1]: LABEL_COLUMN})
 
     # Separate features and target
     X = df.drop(columns=[LABEL_COLUMN])
