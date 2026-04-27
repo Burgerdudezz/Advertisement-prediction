@@ -20,7 +20,7 @@ from sklearn.model_selection import train_test_split
 from src.config import (
     PROCESSED_DATA_PATH,
     MODEL_PATH,
-    TARGET_COLUMN,
+    LABEL_COLUMN,
     TEST_SIZE,
     RANDOM_SEED,
     RF_PARAMS,
@@ -49,8 +49,8 @@ def train(processed_path=PROCESSED_DATA_PATH, model_path=MODEL_PATH):
     df = pd.read_csv(processed_path)
 
     # Separate features and target
-    X = df.drop(columns=[TARGET_COLUMN])
-    y = df[TARGET_COLUMN].str.strip().str.lower()   # strip whitespace from class labels
+    X = df.drop(columns=[LABEL_COLUMN])
+    y = df[LABEL_COLUMN].str.strip().str.lower()   # strip whitespace from class labels
 
     # ------------------------------------------------------------------
     # 2. Train / test split (stratified to preserve class ratios)
