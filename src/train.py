@@ -18,7 +18,8 @@ from sklearn.model_selection import train_test_split
 from src.config import (
     PROCESSED_DATA_PATH,
     MODEL_PATH,
-    TARGET_COLUMN,
+    LABEL_COLUMN,
+    CLEANED_HAS_HEADER,
     TEST_SIZE,
     RANDOM_SEED,
     RF_PARAMS,
@@ -44,11 +45,12 @@ def train(processed_path=PROCESSED_DATA_PATH, model_path=MODEL_PATH):
     # ------------------------------------------------------------------
     # 1. Load data
     # ------------------------------------------------------------------
-    df = pd.read_csv(processed_path)
-
-    # Separate features and target
-    X = df.drop(columns=[TARGET_COLUMN])
-    y = df[TARGET_COLUMN].str.strip()   # strip whitespace from class labels
+    if CLEANED_HAS_HEADER:
+        df = pd.read_csv(processed_path)
+    else:
+        df = pd.read_csv(processed_path, header=None)
+        df.columns = list(range(df.shape[1]))
+        df.rename(columns={df.columns[-1]: LABEL_COLUMN}, inplace=True)
 
     # ------------------------------------------------------------------
     # 2. Train / test split (stratified to preserve class ratios)

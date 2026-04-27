@@ -22,7 +22,7 @@ PLOTS_DIR               = BASE_DIR / "outputs" / "plots"
 # ---------------------------------------------------------------------------
 # Reproducibility
 # ---------------------------------------------------------------------------
-RANDOM_SEED = 42
+RANDOM_SEED = 67
 
 # ---------------------------------------------------------------------------
 # Train / test split
@@ -30,9 +30,11 @@ RANDOM_SEED = 42
 TEST_SIZE = 0.2          # 20 % of data goes to the test set
 
 # ---------------------------------------------------------------------------
-# Target column name (last column in the UCI dataset)
+# Label column name (last column in the UCI dataset)
 # ---------------------------------------------------------------------------
-TARGET_COLUMN = "class"
+LABEL_COLUMN = "class"
+POS_LABEL = "ad."
+NEG_LABEL = "nonad."
 
 # ---------------------------------------------------------------------------
 # Random Forest hyperparameters
@@ -45,3 +47,7 @@ RF_PARAMS = {
     "random_state":    RANDOM_SEED,
     "n_jobs":          -1,        # use all CPU cores
 }
+# ---------------------------------------------------------------------------
+# Cleaned CSV format
+# ---------------------------------------------------------------------------
+CLEANED_HAS_HEADER = False
