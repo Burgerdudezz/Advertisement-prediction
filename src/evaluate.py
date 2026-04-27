@@ -25,7 +25,6 @@ from sklearn.metrics import (
     confusion_matrix,
     roc_curve,
 )
-from sklearn.preprocessing import LabelBinarizer
 
 from src.config import MODEL_PATH, METRICS_DIR, PLOTS_DIR
 
@@ -65,11 +64,10 @@ def evaluate(X_test, y_test, model_path=MODEL_PATH):
     recall    = recall_score(y_test, y_pred, pos_label=pos_label)
     f1        = f1_score(y_test, y_pred, pos_label=pos_label)
 
-    # ROC-AUC: use predicted probabilities for the positive class
+    # ROC-AUC: align y_true with the same positive class used for y_prob.
     y_prob = clf.predict_proba(X_test)[:, list(classes).index(pos_label)]
-    roc_auc = roc_auc_score(
-        LabelBinarizer().fit_transform(y_test).ravel(), y_prob
-    )
+    y_true_bin = (y_test == pos_label).astype(int)
+    roc_auc = roc_auc_score(y_true_bin, y_prob)
 
     print(f"  Accuracy : {acc:.4f}")
     print(f"  Precision: {precision:.4f}")
@@ -143,6 +141,7 @@ def evaluate(X_test, y_test, model_path=MODEL_PATH):
     # 7. Save predictions CSV
     # ------------------------------------------------------------------
     pred_df = pd.DataFrame({
+        "source_index": y_test.index,
         "actual": y_test.values,
         "predicted": y_pred,
         "probability": y_prob,
