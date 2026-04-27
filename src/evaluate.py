@@ -7,6 +7,7 @@ Artefacts produced
 - outputs/metrics/confusion_matrix.txt   – human-readable confusion matrix
 - outputs/metrics/feature_importance.csv – per-feature importances
 - outputs/plots/roc_curve.png            – ROC curve for the positive class
+- outputs/metrics/predictions.csv        – actual vs predicted labels + probabilities
 """
 
 import joblib
@@ -57,7 +58,7 @@ def evaluate(X_test, y_test, model_path=MODEL_PATH):
     # ------------------------------------------------------------------
     # Determine the positive class label (the one that is NOT "nonad.")
     classes = clf.classes_
-    pos_label = [c for c in classes if "nonad" not in c.lower()][0]
+    pos_label = next(c for c in classes if "nonad" not in c.lower())
 
     acc       = accuracy_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred, pos_label=pos_label)
@@ -137,3 +138,17 @@ def evaluate(X_test, y_test, model_path=MODEL_PATH):
     fig.savefig(roc_path, dpi=120)
     plt.close(fig)
     print(f"  ROC curve saved → {roc_path}")
+
+    # ------------------------------------------------------------------
+    # 7. Save predictions CSV
+    # ------------------------------------------------------------------
+    pred_df = pd.DataFrame({
+        "actual": y_test.values,
+        "predicted": y_pred,
+        "probability": y_prob,
+    })
+
+    pred_path = METRICS_DIR / "predictions.csv"
+    pred_df.to_csv(pred_path, index=False)
+
+    print(f"  Predictions saved → {pred_path}")
