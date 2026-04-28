@@ -13,7 +13,7 @@ Steps
 import pandas as pd
 import numpy as np
 
-from src.config import RAW_DATA_PATH, PROCESSED_DATA_PATH, LABEL_COLUMN
+from src.config import RAW_DATA_PATH, PROCESSED_DATA_PATH, LABEL_COLUMN, METRICS_DIR
 
 
 def _normalize_raw_layout(df: pd.DataFrame) -> pd.DataFrame:
@@ -93,5 +93,31 @@ def load_and_clean(raw_path=RAW_DATA_PATH, processed_path=PROCESSED_DATA_PATH):
     processed_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(processed_path, index=False, header=False)
     print(f"  Cleaned data saved → {processed_path}")
+
+    # ------------------------------------------------------------------
+    # 6. Save summary statistics for cleaned features
+    # ------------------------------------------------------------------
+    METRICS_DIR.mkdir(parents=True, exist_ok=True)
+    values = df[feature_cols].to_numpy().ravel()
+
+    global_stats = {
+        "count": float(values.size),
+        "mean": float(np.mean(values)),
+        "std": float(np.std(values, ddof=1)),
+        "min": float(np.min(values)),
+        "q1": float(np.quantile(values, 0.25)),
+        "median": float(np.median(values)),
+        "q3": float(np.quantile(values, 0.75)),
+        "max": float(np.max(values)),
+    }
+
+    stats_df = pd.DataFrame({
+        "metric": list(global_stats.keys()),
+        "value": [f"{v:.4f}" for v in global_stats.values()],
+    })
+
+    stats_path = METRICS_DIR / "cleaned_stats.csv"
+    stats_df.to_csv(stats_path, index=False)
+    print(f"  Cleaned stats saved → {stats_path}")
 
     return df
