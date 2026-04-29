@@ -29,6 +29,14 @@ def main():
     load_and_clean()
 
     # ------------------------------------------------------------------
+    # Generate other datas
+    # ------------------------------------------------------------------
+    from src.eda import generate_eda
+    generate_eda()
+    from src.descriptive_stats import generate_descriptive_stats
+    generate_descriptive_stats()
+
+    # ------------------------------------------------------------------
     # Step 2 – Train
     # ------------------------------------------------------------------
     print("\n[2/3] Training the Random Forest …")
@@ -43,14 +51,6 @@ def main():
     print("\n" + "=" * 50)
     print("Pipeline complete!  Check the outputs/ directory.")
     print("=" * 50)
-
-    # ------------------------------------------------------------------
-    # Generate other datas
-    # ------------------------------------------------------------------
-    from src.eda import generate_eda
-    generate_eda()
-    from src.descriptive_stats import generate_descriptive_stats
-    generate_descriptive_stats()
 
 
 if __name__ == "__main__":
