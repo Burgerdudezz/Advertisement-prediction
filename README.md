@@ -4,6 +4,20 @@ A beginner-friendly machine learning project that predicts whether a web image i
 
 ---
 
+## Objective
+
+Build a binary classifier that labels web images as advertisements (`ad.`) or non-ads (`nonad.`) using the UCI Internet Advertisements dataset.
+
+---
+
+## Dataset
+
+- **Source:** UCI Internet Advertisements dataset (linked above).
+- **Task:** Binary classification (`ad.` vs `nonad.`).
+- **Input:** High-dimensional numeric features derived from image and URL properties.
+
+---
+
 ## Project Structure
 
 ```
@@ -20,6 +34,8 @@ A beginner-friendly machine learning project that predicts whether a web image i
 ├── src/
 │   ├── config.py
 │   ├── preprocess.py
+│   ├── eda.py
+│   ├── descriptive_stats.py
 │   ├── train.py
 │   ├── evaluate.py
 │   └── run_pipeline.py
@@ -69,8 +85,10 @@ python -m src.run_pipeline
 
 This single command runs the full pipeline:
 1. **Preprocess** – cleans the raw CSV and writes `data/processed/cleaned.csv`
-2. **Train** – trains a Random Forest and saves `outputs/model.joblib`
-3. **Evaluate** – scores the model and writes results to `outputs/`
+2. **EDA** – generates exploratory plots in `outputs/plots/`
+3. **Descriptive stats** – saves summary tables and plots in `outputs/metrics/` and `outputs/plots/`
+4. **Train** – trains a Random Forest and saves `outputs/model.joblib`
+5. **Evaluate** – scores the model and writes results to `outputs/`
 
 ---
 
@@ -83,11 +101,63 @@ This single command runs the full pipeline:
 | `outputs/metrics/metrics.csv` | Accuracy, Precision, Recall, F1, ROC-AUC |
 | `outputs/metrics/confusion_matrix.txt` | Confusion matrix |
 | `outputs/metrics/feature_importance.csv` | Per-feature importances |
+| `outputs/metrics/threshold_metrics.csv` | Precision/Recall/F1 over thresholds |
+| `outputs/metrics/predictions.csv` | Predictions + probabilities |
 | `outputs/plots/roc_curve.png` | ROC curve plot |
+| `outputs/plots/pr_curve.png` | Precision-recall curve plot |
+| `outputs/plots/confusion_matrix.png` | Confusion matrix heatmap |
+| `outputs/plots/threshold_tradeoff.png` | Threshold tradeoff curves |
+| `outputs/plots/class_distribution.png` | Actual vs predicted class counts |
+| `outputs/plots/feature_importance_top20.png` | Top feature importances |
+
+---
+
+## Preprocessing Summary
+
+- Handles accidental header/index rows in the raw CSV.
+- Replaces missing values marked as `?` with `NaN` and imputes numeric means.
+- Strips whitespace from class labels to keep them consistent.
+
+---
+
+## Model
+
+- **Algorithm:** Random Forest classifier (scikit-learn).
+- **Rationale:** Robust baseline for high-dimensional numeric features and imbalanced classes.
+- **Tuning:** Small grid over `n_estimators` and `max_features`.
+
+---
+
+## Evaluation
+
+- **Metrics:** Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC.
+- **Diagnostics:** Confusion matrix, ROC/PR curves, class distribution, threshold tradeoff plots.
+
+---
+
+## Reproducibility
+
+- Random seed, train/test split, and model settings are centralized in `src/config.py`.
+- Main entrypoint: `python -m src.run_pipeline`.
+
+---
+
+## Limitations and Future Work
+
+- The model uses a simple hyperparameter search; broader tuning may improve performance.
+- Feature engineering is minimal; additional domain features could help.
+- Consider calibration or alternative models (e.g., gradient boosting) for better probabilistic outputs.
+
+---
+
+## References
+
+- UCI Internet Advertisements dataset (linked above)
+- scikit-learn documentation
 
 ---
 
 ## Configuration
 
-All tuneable settings live in `src/config.py`. Edit that file to change the data path,
+All tunable settings live in `src/config.py`. Edit that file to change the data path,
 random seed, train/test split ratio, or Random Forest hyperparameters.
